@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DEFAULT_GEMINI_MODEL } from '../config/models.js';
 
 /**
  * Checks if the default "pro" model is rate-limited and returns a fallback "flash"

@@ -49,6 +49,7 @@ AI_CHAT_NAME=Gemma-3n
 ```
 
 These values will be loaded when you select the **Ollama** auth method. You can also use `OLLAMA_BASE_URL` to override the default host.
+You may also set `DEFAULT_GEMINI_MODEL`, `DEFAULT_GEMINI_FLASH_MODEL`, and `DEFAULT_GEMINI_EMBEDDING_MODEL` here to override the built-in defaults.
 Variables from `.ollama-config` override any existing environment variables, so you can maintain different settings per project.
 
 ## Examples

@@ -37,9 +37,9 @@ export class OllamaContentGenerator {
         const data = JSON.parse(bodyText);
         return data.response ?? data;
       } catch (parseError) {
-        const snippet = bodyText.slice(0, 200);
+        const snippet = bodyText.slice(0, 500);
         throw new Error(
-          `fetch failed for ${url} with model ${body.model}: ${getErrorMessage(parseError)}. Response was: ${snippet}`,
+          `fetch failed for ${url} with model ${body.model}: ${getErrorMessage(parseError)}. Response text:\n${snippet}`,
         );
       }
     } catch (error) {

@@ -12,7 +12,7 @@ import {
   EmbedContentResponse,
   EmbedContentParameters,
 } from '@google/genai';
-import { DEFAULT_GEMINI_MODEL } from '../config/models.js';
+import { getDefaultGeminiModel } from '../config/models.js';
 import { OllamaContentGenerator } from './ollamaContentGenerator.js';
 
 /**
@@ -52,7 +52,8 @@ export async function createContentGeneratorConfig(
   config?: { getModel?: () => string },
 ): Promise<ContentGeneratorConfig> {
   // Use runtime model from config if available, otherwise fallback to parameter or default
-  const effectiveModel = config?.getModel?.() || model || DEFAULT_GEMINI_MODEL;
+  const effectiveModel =
+    config?.getModel?.() || model || getDefaultGeminiModel();
 
   const contentGeneratorConfig: ContentGeneratorConfig = {
     model: effectiveModel,
