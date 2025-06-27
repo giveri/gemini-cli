@@ -26,7 +26,7 @@ export class OllamaContentGenerator {
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ ...body, stream: false }),
       });
       if (!res.ok) {
         const text = await res.text().catch(() => '');
