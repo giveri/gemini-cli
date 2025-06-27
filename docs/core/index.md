@@ -10,7 +10,7 @@ Gemini CLI's core package (`packages/core`) is the backend portion of Gemini CLI
 
 While the `packages/cli` portion of Gemini CLI provides the user interface, `packages/core` is responsible for:
 
-- **Gemini API interaction:** Securely communicating with the Google Gemini API, sending user prompts, and receiving model responses.
+- **Model API interaction:** Communicating with your local Ollama server, sending user prompts, and receiving model responses.
 - **Prompt engineering:** Constructing effective prompts for the Gemini model, potentially incorporating conversation history, tool definitions, and instructional context from `GEMINI.md` files.
 - **Tool management & orchestration:**
   - Registering available tools (e.g., file system tools, shell command execution).

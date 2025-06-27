@@ -32,8 +32,16 @@ export class OllamaContentGenerator {
         const text = await res.text().catch(() => '');
         throw new Error(`HTTP ${res.status} ${res.statusText}: ${text}`);
       }
-      const data = await res.json();
-      return data.response ?? data;
+      const bodyText = await res.text();
+      try {
+        const data = JSON.parse(bodyText);
+        return data.response ?? data;
+      } catch (parseError) {
+        const snippet = bodyText.slice(0, 200);
+        throw new Error(
+          `fetch failed for ${url} with model ${body.model}: ${getErrorMessage(parseError)}. Response was: ${snippet}`,
+        );
+      }
     } catch (error) {
       throw new Error(
         `fetch failed for ${url} with model ${body.model}: ${getErrorMessage(error)}`,

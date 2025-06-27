@@ -324,6 +324,8 @@ export function loadEnvironment(): void {
 export function loadOllamaEnvironment(): void {
   const ollamaPath = findOllamaConfig(process.cwd());
   if (ollamaPath) {
-    dotenv.config({ path: ollamaPath });
+    // Use override to ensure `.ollama-config` values take precedence over
+    // existing environment variables or `.env` entries.
+    dotenv.config({ path: ollamaPath, override: true });
   }
 }
