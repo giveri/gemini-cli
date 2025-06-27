@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// DISCLAIMER: This is a copied version of https://github.com/googleapis/js-genai/blob/main/src/chats.ts with the intention of working around a key bug
-// where function responses are not treated as "valid" responses: https://b.corp.google.com/issues/420354090
+// DISCLAIMER: This is a modified version of https://github.com/googleapis/js-genai/blob/main/src/chats.ts
+// adjusted to treat function responses as valid responses.
 
 import {
   GenerateContentResponse,
@@ -529,7 +529,7 @@ export class GeminiChat {
     } else {
       // When not a function response appends an empty content when model returns empty response, so that the
       // history is always alternating between user and model.
-      // Workaround for: https://b.corp.google.com/issues/420354090
+      // Ensure history alternates between user and model when the model returns an empty response.
       if (!isFunctionResponse(userInput)) {
         outputContents.push({
           role: 'model',
