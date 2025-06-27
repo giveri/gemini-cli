@@ -33,8 +33,13 @@ export class OllamaContentGenerator {
         throw new Error(`HTTP ${res.status} ${res.statusText}: ${text}`);
       }
       const bodyText = await res.text();
+      const lastLine = bodyText
+        .trim()
+        .split('\n')
+        .filter((l) => l.trim().length > 0)
+        .pop() || '';
       try {
-        const data = JSON.parse(bodyText);
+        const data = JSON.parse(lastLine);
         return data.response ?? data;
       } catch (parseError) {
         const snippet = bodyText.slice(0, 500);

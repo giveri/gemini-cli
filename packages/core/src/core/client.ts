@@ -298,18 +298,26 @@ export class GeminiClient {
       try {
         return JSON.parse(text);
       } catch (parseError) {
-        await reportError(
-          parseError,
-          'Failed to parse JSON response from generateJson.',
-          {
-            responseTextFailedToParse: text,
-            originalRequestContents: contents,
-          },
-          'generateJson-parse',
-        );
-        throw new Error(
-          `Failed to parse API response as JSON: ${getErrorMessage(parseError)}`,
-        );
+        const trimmed = text
+          .trim()
+          .replace(/^```(?:json)?\n/, '')
+          .replace(/```\s*$/, '');
+        try {
+          return JSON.parse(trimmed);
+        } catch {
+          await reportError(
+            parseError,
+            'Failed to parse JSON response from generateJson.',
+            {
+              responseTextFailedToParse: text,
+              originalRequestContents: contents,
+            },
+            'generateJson-parse',
+          );
+          throw new Error(
+            `Failed to parse API response as JSON: ${getErrorMessage(parseError)}`,
+          );
+        }
       }
     } catch (error) {
       if (abortSignal.aborted) {
