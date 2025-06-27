@@ -52,9 +52,26 @@ export class OllamaContentGenerator {
   async generateContent(
     request: GenerateContentParameters,
   ): Promise<GenerateContentResponse> {
-    const prompt = request.contents
-      .flatMap((c) => c.parts ?? [])
-      .map((p) => (typeof p === 'string' ? p : p.text || ''))
+    const contents = Array.isArray(request.contents)
+      ? request.contents
+      : [request.contents];
+    const prompt = contents
+      .flatMap((c: any) => {
+        if (Array.isArray(c)) {
+          return c;
+        }
+        if (typeof c === 'string') {
+          return [c];
+        }
+        if (Array.isArray(c.parts)) {
+          return c.parts;
+        }
+        if (c.parts) {
+          return [c.parts];
+        }
+        return [];
+      })
+      .map((p: any) => (typeof p === 'string' ? p : p.text || ''))
       .join('\n');
     const text = await this.callApi({ model: this.model, prompt });
     return {
