@@ -15,7 +15,10 @@ export interface OllamaRequest {
 }
 
 export class OllamaContentGenerator {
-  constructor(private baseUrl: string, private model: string) {}
+  constructor(
+    private baseUrl: string,
+    private model: string,
+  ) {}
 
   private async callApi(body: OllamaRequest): Promise<string> {
     const url = `${this.baseUrl}/api/generate`;
@@ -69,7 +72,9 @@ export class OllamaContentGenerator {
     return { totalTokens: 0 } as CountTokensResponse;
   }
 
-  async embedContent(_req: EmbedContentParameters): Promise<EmbedContentResponse> {
+  async embedContent(
+    _req: EmbedContentParameters,
+  ): Promise<EmbedContentResponse> {
     return { embeddings: [] } as EmbedContentResponse;
   }
 }

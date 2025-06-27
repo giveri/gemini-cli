@@ -39,7 +39,16 @@ You are now ready to use the Gemini CLI!
 
 ### For advanced use
 
-You can configure the `OLLAMA_BASE_URL` environment variable if your Ollama server is running on a different host or port.
+You can configure the connection by creating a `.ollama-config` file containing variables like:
+
+```bash
+AI_CHAT_BASE_URL=http://172.16.0.1:11434/v1
+AI_CHAT_MODEL=gemma3n:e4b
+AI_CHAT_KEY=dummy
+AI_CHAT_NAME=Gemma-3n
+```
+
+These values will be loaded when you select the **Ollama** auth method. You can also use `OLLAMA_BASE_URL` to override the default host.
 
 ## Examples
 

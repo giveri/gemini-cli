@@ -36,6 +36,7 @@ export enum AuthType {
   LOGIN_WITH_GOOGLE_PERSONAL = 'oauth-personal',
   USE_GEMINI = 'gemini-api-key',
   USE_VERTEX_AI = 'vertex-ai',
+  USE_OLLAMA = 'ollama',
 }
 
 export type ContentGeneratorConfig = {
@@ -64,6 +65,21 @@ export async function createContentGeneratorConfig(
 export async function createContentGenerator(
   config: ContentGeneratorConfig,
 ): Promise<ContentGenerator> {
+  if (config.authType === AuthType.USE_OLLAMA) {
+    const baseUrl =
+      process.env.AI_CHAT_BASE_URL ||
+      process.env.OLLAMA_BASE_URL ||
+      'http://localhost:11434';
+    const model = process.env.AI_CHAT_MODEL || config.model;
+    return new OllamaContentGenerator(
+      baseUrl,
+      model,
+    ) as unknown as ContentGenerator;
+  }
+
   const baseUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
-  return new OllamaContentGenerator(baseUrl, config.model) as unknown as ContentGenerator;
+  return new OllamaContentGenerator(
+    baseUrl,
+    config.model,
+  ) as unknown as ContentGenerator;
 }

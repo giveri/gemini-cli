@@ -231,6 +231,8 @@ The CLI automatically loads environment variables from an `.env` file. The loadi
 2.  If not found, it searches upwards in parent directories until it finds an `.env` file or reaches the project root (identified by a `.git` folder) or the home directory.
 3.  If still not found, it looks for `~/.env` (in the user's home directory).
 
+For the **Ollama** auth method, the CLI also looks for a `.ollama-config` file using the same search order. This file can contain variables like `AI_CHAT_BASE_URL` and `AI_CHAT_MODEL` to configure the local Ollama server.
+
 - **`GEMINI_API_KEY`** (Required):
   - Your API key for the Gemini API.
   - **Crucial for operation.** The CLI will not function without it.

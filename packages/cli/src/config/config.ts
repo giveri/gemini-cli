@@ -294,9 +294,36 @@ function findEnvFile(startDir: string): string | null {
   }
 }
 
+function findOllamaConfig(startDir: string): string | null {
+  let currentDir = path.resolve(startDir);
+  while (true) {
+    const configPath = path.join(currentDir, '.ollama-config');
+    if (fs.existsSync(configPath)) {
+      return configPath;
+    }
+    const parentDir = path.dirname(currentDir);
+    if (parentDir === currentDir || !parentDir) {
+      const homePath = path.join(os.homedir(), '.ollama-config');
+      if (fs.existsSync(homePath)) {
+        return homePath;
+      }
+      return null;
+    }
+    currentDir = parentDir;
+  }
+}
+
 export function loadEnvironment(): void {
   const envFilePath = findEnvFile(process.cwd());
   if (envFilePath) {
     dotenv.config({ path: envFilePath });
+  }
+  loadOllamaEnvironment();
+}
+
+export function loadOllamaEnvironment(): void {
+  const ollamaPath = findOllamaConfig(process.cwd());
+  if (ollamaPath) {
+    dotenv.config({ path: ollamaPath });
   }
 }
