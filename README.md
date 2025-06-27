@@ -12,8 +12,7 @@ With the Gemini CLI you can:
 - Query and edit large codebases in and beyond Gemini's 1M token context window.
 - Generate new apps from PDFs or sketches, using Gemini's multimodal capabilities.
 - Automate operational tasks, like querying pull requests or handling complex rebases.
-- Use tools and MCP servers to connect new capabilities, including [media generation with Imagen,
-  Veo or Lyria](https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia)
+- Use tools and MCP servers to connect new capabilities, such as media generation via local servers.
 - Ground your queries with the built-in web search tool.
 
 ## Quickstart

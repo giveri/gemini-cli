@@ -11,9 +11,7 @@ This guide provides solutions to common issues and debugging tips.
     tier of the Google Code Assist plan.
   - For Google Cloud accounts, you can work around this by setting
     `GOOGLE_CLOUD_PROJECT` to your project ID.
-  - You can also grab an API key from [AI
-    Studio](http://aistudio.google.com/app/apikey), which also includes a
-    separate free tier.
+  - You can also grab an API key from a local model provider if available.
 
 ## Frequently asked questions (FAQs)
 
