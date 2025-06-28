@@ -111,7 +111,7 @@ export class ShellTool extends BaseTool<ShellToolParams, ToolResult> {
         return 'Directory cannot be absolute. Must be relative to the project root directory.';
       }
       const directory = path.resolve(
-        this.config.getTargetDir(),
+        this.config.getWorkingDir(),
         params.directory,
       );
       if (!fs.existsSync(directory)) {
@@ -190,12 +190,18 @@ export class ShellTool extends BaseTool<ShellToolParams, ToolResult> {
       ? spawn('cmd.exe', ['/c', command], {
           stdio: ['ignore', 'pipe', 'pipe'],
           // detached: true, // ensure subprocess starts its own process group (esp. in Linux)
-          cwd: path.resolve(this.config.getTargetDir(), params.directory || ''),
+          cwd: path.resolve(
+            this.config.getWorkingDir(),
+            params.directory || '',
+          ),
         })
       : spawn('bash', ['-c', command], {
           stdio: ['ignore', 'pipe', 'pipe'],
           detached: true, // ensure subprocess starts its own process group (esp. in Linux)
-          cwd: path.resolve(this.config.getTargetDir(), params.directory || ''),
+          cwd: path.resolve(
+            this.config.getWorkingDir(),
+            params.directory || '',
+          ),
         });
 
     let exited = false;

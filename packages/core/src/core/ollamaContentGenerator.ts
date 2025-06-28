@@ -23,6 +23,7 @@ export interface OllamaRequest {
   messages: unknown[];
   tools?: unknown[];
   tool_choice?: string;
+  response_format?: { type: 'json_object' };
   stream?: boolean;
 }
 
@@ -181,6 +182,7 @@ export class OllamaContentGenerator {
       model: this.model,
       messages,
       stream: false,
+      response_format: { type: 'json_object' },
     };
     if (toolsDecls.length > 0) {
       body.tools = this.convertTools(toolsDecls);
