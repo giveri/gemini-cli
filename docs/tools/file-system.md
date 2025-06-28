@@ -96,10 +96,24 @@ The Gemini CLI provides a comprehensive suite of tools for interacting with the 
 - **Behavior:**
   - Writes the provided `content` to the `file_path`.
   - Creates parent directories if they don't exist.
-- **Output (`llmContent`):** A success message, e.g., `Successfully overwrote file: /path/to/your/file.txt` or `Successfully created and wrote to new file: /path/to/new/file.txt`.
-- **Confirmation:** Yes. Shows a diff of changes and asks for user approval before writing.
+  - **Output (`llmContent`):** A success message, e.g., `Successfully overwrote file: /path/to/your/file.txt` or `Successfully created and wrote to new file: /path/to/new/file.txt`.
+  - **Confirmation:** Yes. Shows a diff of changes and asks for user approval before writing.
 
-## 4. `glob` (FindFiles)
+## 4. `create_folder` (CreateFolder)
+
+`create_folder` creates a directory at the specified absolute path. Missing parent directories are created automatically.
+
+- **Tool name:** `create_folder`
+- **Display name:** CreateFolder
+- **File:** `create-folder.ts`
+- **Parameters:**
+  - `path` (string, required): The absolute path of the directory to create.
+- **Behavior:**
+  - Creates the directory and any missing parent directories.
+- **Output (`llmContent`):** `Created directory: /path/to/dir` on success.
+- **Confirmation:** No.
+
+## 5. `glob` (FindFiles)
 
 `glob` finds files matching specific glob patterns (e.g., `src/**/*.ts`, `*.md`), returning absolute paths sorted by modification time (newest first).
 
@@ -132,7 +146,7 @@ The Gemini CLI provides a comprehensive suite of tools for interacting with the 
 - **Output (`llmContent`):** A message like: `Found 5 file(s) matching "*.ts" within src, sorted by modification time (newest first):\nsrc/file1.ts\nsrc/subdir/file2.ts...`
 - **Confirmation:** No.
 
-## 5. `search_file_content` (SearchText)
+## 6. `search_file_content` (SearchText)
 
 `search_file_content` searches for a regular expression pattern within the content of files in a specified directory. Can filter files by a glob pattern. Returns the lines containing matches, along with their file paths and line numbers.
 
@@ -172,7 +186,7 @@ The Gemini CLI provides a comprehensive suite of tools for interacting with the 
 - **Confirmation:** No.
 - **Confirmation:** No.
 
-## 6. `replace` (Edit)
+## 7. `replace` (Edit)
 
 `replace` replaces text within a file. By default, replaces a single occurrence, but can replace multiple occurrences when `expected_replacements` is specified. This tool is designed for precise, targeted changes and requires significant context around the `old_string` to ensure it modifies the correct location.
 
