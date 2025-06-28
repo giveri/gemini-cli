@@ -79,7 +79,10 @@ export class CreateFolderTool extends BaseTool<CreateFolderParams, ToolResult> {
     return `Creating directory ${shortenPath(relativePath)}`;
   }
 
-  async shouldConfirmExecute(): Promise<boolean> {
+  async shouldConfirmExecute(
+    _params: CreateFolderParams,
+    _abortSignal: AbortSignal,
+  ): Promise<false> {
     return false;
   }
 
