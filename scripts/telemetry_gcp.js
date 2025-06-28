@@ -62,7 +62,7 @@ service:
 `;
 
 async function main() {
-  console.log('✨ Starting Local Telemetry Exporter for Google Cloud ✨');
+  console.log('✨ Starting Local Telemetry Exporter ✨');
 
   let collectorProcess;
   let collectorLogFd;
@@ -83,21 +83,10 @@ async function main() {
     console.error(
       '🛑 Error: OTLP_GOOGLE_CLOUD_PROJECT environment variable is not exported.',
     );
-    console.log(
-      '   Please set it to your Google Cloud Project ID and try again.',
-    );
     console.log('   `export OTLP_GOOGLE_CLOUD_PROJECT=your-project-id`');
     process.exit(1);
   }
-  console.log(`✅ Using OTLP Google Cloud Project ID: ${projectId}`);
-
-  console.log('\n🔑 Please ensure you are authenticated with Google Cloud:');
-  console.log(
-    '  - Run `gcloud auth application-default login` OR ensure `GOOGLE_APPLICATION_CREDENTIALS` environment variable points to a valid service account key.',
-  );
-  console.log(
-    '  - The account needs "Cloud Trace Agent", "Monitoring Metric Writer", and "Logs Writer" roles.',
-  );
+  console.log(`✅ Using OTLP project ID: ${projectId}`);
 
   if (!fileExists(BIN_DIR)) fs.mkdirSync(BIN_DIR, { recursive: true });
 

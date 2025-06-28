@@ -11,7 +11,7 @@ import { AuthType, StructuredError } from '@google/gemini-cli-core';
 describe('parseAndFormatApiError', () => {
   const enterpriseMessage = 'upgrade to a plan with higher limits';
   const vertexMessage = 'request a quota increase through Vertex';
-  const geminiMessage = 'request a quota increase through AI Studio';
+  const geminiMessage = 'contact your provider to request higher limits';
 
   it('should format a valid API error JSON', () => {
     const errorMessage =
