@@ -58,7 +58,7 @@ release:
 	npm run publish:release
 
 run-npx:
-	npx https://github.com/google-gemini/gemini-cli
+        npx https://github.com/gemini-cli/gemini-cli
 
 create-alias:
 	scripts/create_alias.sh
