@@ -83,7 +83,6 @@ export interface IneligibleTier {
 
 /**
  * List of predefined reason codes when a tier is blocked from a specific tier.
- * https://source.corp.google.com/piper///depot/google3/google/internal/cloud/code/v1internal/cloudcode.proto;l=378
  */
 export enum IneligibleTierReasonCode {
   // go/keep-sorted start

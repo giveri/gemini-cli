@@ -49,7 +49,7 @@ if (!settingsTarget) {
 }
 
 let target = settingsTarget || 'local';
-const allowedTargets = ['local', 'gcp'];
+const allowedTargets = ['local'];
 
 const targetArg = process.argv.find((arg) => arg.startsWith('--target='));
 if (targetArg) {
@@ -59,7 +59,7 @@ if (targetArg) {
     console.log(`⚙️  Using command-line target: ${target}`);
   } else {
     console.error(
-      `🛑 Error: Invalid target '${potentialTarget}'. Allowed targets are: ${allowedTargets.join(', ')}.`,
+      `🛑 Error: Invalid target '${potentialTarget}'. Allowed target is: ${allowedTargets[0]}.`,
     );
     process.exit(1);
   }
@@ -69,11 +69,7 @@ if (targetArg) {
   );
 }
 
-const scriptPath = join(
-  projectRoot,
-  'scripts',
-  target === 'gcp' ? 'telemetry_gcp.js' : 'local_telemetry.js',
-);
+const scriptPath = join(projectRoot, 'scripts', 'local_telemetry.js');
 
 try {
   console.log(`🚀 Running telemetry script for target: ${target}.`);

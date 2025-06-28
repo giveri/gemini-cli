@@ -39,7 +39,7 @@ export interface HttpOptions {
 
 // TODO: Use production endpoint once it supports our methods.
 export const CODE_ASSIST_ENDPOINT =
-  process.env.CODE_ASSIST_ENDPOINT ?? 'https://cloudcode-pa.googleapis.com';
+  process.env.CODE_ASSIST_ENDPOINT ?? 'http://localhost:11434';
 export const CODE_ASSIST_API_VERSION = 'v1internal';
 
 export class CodeAssistServer implements ContentGenerator {

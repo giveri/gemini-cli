@@ -18,7 +18,7 @@ import { GeminiChat } from './geminiChat.js';
 import { Config } from '../config/config.js';
 import { Turn } from './turn.js';
 import { getCoreSystemPrompt } from './prompts.js';
-import { DEFAULT_GEMINI_FLASH_MODEL } from '../config/models.js';
+import { getDefaultGeminiFlashModel } from '../config/models.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 import { setSimulate429 } from '../utils/testUtils.js';
 
@@ -304,7 +304,7 @@ describe('Gemini Client (client.ts)', () => {
       await client.generateJson(contents, schema, abortSignal);
 
       expect(mockGenerateContentFn).toHaveBeenCalledWith({
-        model: DEFAULT_GEMINI_FLASH_MODEL,
+        model: getDefaultGeminiFlashModel(),
         config: {
           abortSignal,
           systemInstruction: getCoreSystemPrompt(''),

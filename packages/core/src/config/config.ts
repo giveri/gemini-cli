@@ -36,8 +36,8 @@ import {
   StartSessionEvent,
 } from '../telemetry/index.js';
 import {
-  DEFAULT_GEMINI_EMBEDDING_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
+  getDefaultGeminiEmbeddingModel,
+  getDefaultGeminiFlashModel,
 } from './models.js';
 import { ClearcutLogger } from '../telemetry/clearcut-logger/clearcut-logger.js';
 
@@ -170,7 +170,7 @@ export class Config {
   constructor(params: ConfigParameters) {
     this.sessionId = params.sessionId;
     this.embeddingModel =
-      params.embeddingModel ?? DEFAULT_GEMINI_EMBEDDING_MODEL;
+      params.embeddingModel ?? getDefaultGeminiEmbeddingModel();
     this.sandbox = params.sandbox;
     this.targetDir = path.resolve(params.targetDir);
     this.debugMode = params.debugMode;
@@ -498,5 +498,5 @@ export function createToolRegistry(config: Config): Promise<ToolRegistry> {
   })();
 }
 
-// Export model constants for use in CLI
-export { DEFAULT_GEMINI_FLASH_MODEL };
+// Export model getter for use in CLI
+export { getDefaultGeminiFlashModel };
