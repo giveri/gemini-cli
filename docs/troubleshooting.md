@@ -21,7 +21,7 @@ This guide provides solutions to common issues and debugging tips.
 
 - **Q: Why don't I see cached token counts in my stats output?**
 
-  - A: Cached token information is only displayed when cached tokens are being used. This feature is available for API key users (Gemini API key or Vertex AI) but not for OAuth users at this time, as the Code Assist API does not support cached content creation. You can still view your total token usage with the `/stats` command.
+  - A: Cached token information is only displayed when cached tokens are being used. This feature is available for API key users (Ollama API key or Vertex AI) but not for OAuth users at this time, as the Code Assist API does not support cached content creation. You can still view your total token usage with the `/stats` command.
 
 ## Common error messages and solutions
 

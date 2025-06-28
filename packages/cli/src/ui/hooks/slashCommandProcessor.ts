@@ -203,7 +203,7 @@ export const useSlashCommandProcessor = (
         name: 'docs',
         description: 'open full Gemini CLI documentation in your browser',
         action: async (_mainCommand, _subCommand, _args) => {
-          const docsUrl = 'https://goo.gle/gemini-cli-docs';
+          const docsUrl = 'https://github.com/gemini-cli/gemini-cli';
           if (process.env.SANDBOX && process.env.SANDBOX !== 'sandbox-exec') {
             addMessage({
               type: MessageType.INFO,
@@ -308,7 +308,8 @@ export const useSlashCommandProcessor = (
           const serverNames = Object.keys(mcpServers);
 
           if (serverNames.length === 0) {
-            const docsUrl = 'https://goo.gle/gemini-cli-docs-mcp';
+            const docsUrl =
+              'https://github.com/gemini-cli/gemini-cli#model-context-protocol';
             if (process.env.SANDBOX && process.env.SANDBOX !== 'sandbox-exec') {
               addMessage({
                 type: MessageType.INFO,

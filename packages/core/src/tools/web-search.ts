@@ -55,7 +55,7 @@ export interface WebSearchToolResult extends ToolResult {
 }
 
 /**
- * A tool to perform web searches using Google Search via the Gemini API.
+ * A tool to perform web searches using the configured provider via the Ollama API.
  */
 export class WebSearchTool extends BaseTool<
   WebSearchToolParams,

@@ -751,7 +751,7 @@ describe('useSlashCommandProcessor', () => {
         2,
         expect.objectContaining({
           type: MessageType.INFO,
-          text: `No MCP servers configured. Please open the following URL in your browser to view documentation:\nhttps://goo.gle/gemini-cli-docs-mcp`,
+          text: `No MCP servers configured. Please open the following URL in your browser to view documentation:\nhttps://github.com/gemini-cli/gemini-cli#model-context-protocol`,
         }),
         expect.any(Number),
       );
@@ -778,11 +778,13 @@ describe('useSlashCommandProcessor', () => {
         2,
         expect.objectContaining({
           type: MessageType.INFO,
-          text: 'No MCP servers configured. Opening documentation in your browser: https://goo.gle/gemini-cli-docs-mcp',
+          text: 'No MCP servers configured. Opening documentation in your browser: https://github.com/gemini-cli/gemini-cli#model-context-protocol',
         }),
         expect.any(Number),
       );
-      expect(open).toHaveBeenCalledWith('https://goo.gle/gemini-cli-docs-mcp');
+      expect(open).toHaveBeenCalledWith(
+        'https://github.com/gemini-cli/gemini-cli#model-context-protocol',
+      );
       expect(commandResult).toBe(true);
     });
 

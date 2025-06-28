@@ -7,7 +7,7 @@
 import { type PartListUnion, type Part } from '@google/genai';
 
 /**
- * Represents a request to be sent to the Gemini API.
+ * Represents a request to be sent to the Ollama API.
  * For now, it's an alias to PartListUnion as the primary content.
  * This can be expanded later to include other request parameters.
  */

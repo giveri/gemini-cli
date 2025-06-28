@@ -22,7 +22,7 @@ To use Gemini CLI tools, provide a prompt to the Gemini CLI. The process works a
 
 1.  You provide a prompt to the Gemini CLI.
 2.  The CLI sends the prompt to the core.
-3.  The core, along with your prompt and conversation history, sends a list of available tools and their descriptions/schemas to the Gemini API.
+3.  The core, along with your prompt and conversation history, sends a list of available tools and their descriptions/schemas to the Ollama API.
 4.  The Gemini model analyzes your request. If it determines that a tool is needed, its response will include a request to execute a specific tool with certain parameters.
 5.  The core receives this tool request, validates it, and (often after user confirmation for sensitive operations) executes the tool.
 6.  The output from the tool is sent back to the Gemini model.

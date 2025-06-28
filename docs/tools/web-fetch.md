@@ -14,9 +14,9 @@ Use `web_fetch` to summarize, compare, or extract information from web pages. Th
 
 ## How to use `web_fetch` with the Gemini CLI
 
-To use `web_fetch` with the Gemini CLI, provide a natural language prompt that contains URLs. The tool will ask for confirmation before fetching any URLs. Once confirmed, the tool will process URLs through Gemini API's `urlContext`.
+To use `web_fetch` with the Gemini CLI, provide a natural language prompt that contains URLs. The tool will ask for confirmation before fetching any URLs. Once confirmed, the tool will process URLs through Ollama API.
 
-If the Gemini API cannot access the URL, the tool will fall back to fetching content directly from the local machine. The tool will format the response, including source attribution and citations where possible. The tool will then provide the response to the user.
+If the Ollama API cannot access the URL, the tool will fall back to fetching content directly from the local machine. The tool will format the response, including source attribution and citations where possible. The tool will then provide the response to the user.
 
 Usage:
 
@@ -40,5 +40,5 @@ web_fetch(prompt="What are the differences in the conclusions of these two paper
 
 ## Important notes
 
-- **URL processing:** `web_fetch` relies on the Gemini API's ability to access and process the given URLs.
+- **URL processing:** `web_fetch` relies on the Ollama API's ability to access and process the given URLs.
 - **Output quality:** The quality of the output will depend on the clarity of the instructions in the prompt.

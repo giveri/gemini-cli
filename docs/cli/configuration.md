@@ -233,10 +233,9 @@ The CLI automatically loads environment variables from an `.env` file. The loadi
 
 For the **Ollama** auth method, the CLI also looks for a `.ollama-config` file using the same search order. This file can contain variables like `AI_CHAT_BASE_URL` and `AI_CHAT_MODEL` to configure the local Ollama server. You may also specify `DEFAULT_GEMINI_MODEL`, `DEFAULT_GEMINI_FLASH_MODEL`, and `DEFAULT_GEMINI_EMBEDDING_MODEL` to override the built-in defaults. Values in `.ollama-config` override existing environment variables so you can easily switch models or endpoints per project.
 
-- **`GEMINI_API_KEY`** (Required):
-  - Your API key for the Gemini API.
-  - **Crucial for operation.** The CLI will not function without it.
-  - Set this in your shell profile (e.g., `~/.bashrc`, `~/.zshrc`) or an `.env` file.
+- **`GEMINI_API_KEY`**:
+  - Only required when using the remote Gemini API.
+  - Set this in your shell profile (e.g., `~/.bashrc`, `~/.zshrc`) or an `.env` file if you plan to use Google-hosted models.
 - **`GEMINI_MODEL`**:
   - Specifies the default Gemini model to use.
   - Overrides the hardcoded default

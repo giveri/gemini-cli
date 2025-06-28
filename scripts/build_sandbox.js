@@ -80,12 +80,9 @@ if (!argv.s) {
 console.log('packing gemini-cli ...');
 const cliPackageDir = join('packages', 'cli');
 rmSync(join(cliPackageDir, 'dist', 'gemini-cli-*.tgz'), { force: true });
-execSync(
-  `npm pack -w gemini-cli --pack-destination ./packages/cli/dist`,
-  {
-    stdio: 'ignore',
-  },
-);
+execSync(`npm pack -w gemini-cli --pack-destination ./packages/cli/dist`, {
+  stdio: 'ignore',
+});
 
 console.log('packing gemini-cli-core ...');
 const corePackageDir = join('packages', 'core');

@@ -89,7 +89,6 @@ Use the `npm run telemetry` command to automate the process of setting up a loca
 1.  **Stop the services**:
     Press `Ctrl+C` in the terminal where the script is running to stop the OTEL Collector and Jaeger services.
 
-
 ## Logs and metric reference
 
 The following section describes the structure of logs and metrics generated for Gemini CLI.
@@ -133,7 +132,7 @@ Logs are timestamped records of specific events. The following events are logged
     - `error` (if applicable)
     - `error_type` (if applicable)
 
-- `gemini_cli.api_request`: This event occurs when making a request to Gemini API.
+- `gemini_cli.api_request`: This event occurs when making a request to Ollama API.
 
   - **Attributes**:
     - `model`
@@ -148,7 +147,7 @@ Logs are timestamped records of specific events. The following events are logged
     - `status_code`
     - `duration_ms`
 
-- `gemini_cli.api_response`: This event occurs upon receiving a response from Gemini API.
+- `gemini_cli.api_response`: This event occurs upon receiving a response from Ollama API.
 
   - **Attributes**:
     - `model`

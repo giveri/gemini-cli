@@ -1,6 +1,6 @@
 # Gemini CLI Core
 
-Gemini CLI's core package (`packages/core`) is the backend portion of Gemini CLI, handling communication with the Gemini API, managing tools, and processing requests sent from `packages/cli`. For a general overview of Gemini CLI, see the [main documentation page](../index.md).
+Gemini CLI's core package (`packages/core`) is the backend portion of Gemini CLI, handling communication with a local Ollama API, managing tools, and processing requests sent from `packages/cli`. For a general overview of Gemini CLI, see the [main documentation page](../index.md).
 
 ## Navigating this section
 
@@ -24,7 +24,7 @@ While the `packages/cli` portion of Gemini CLI provides the user interface, `pac
 
 The core plays a vital role in security:
 
-- **API key management:** It handles the `GEMINI_API_KEY` and ensures it's used securely when communicating with the Gemini API.
+- **API key management:** When using the remote Gemini API, the core manages the `GEMINI_API_KEY` securely. Local Ollama setups do not require this key.
 - **Tool execution:** When tools interact with the local system (e.g., `run_shell_command`), the core (and its underlying tool implementations) must do so with appropriate caution, often involving sandboxing mechanisms to prevent unintended modifications.
 
 ## Chat history compression
