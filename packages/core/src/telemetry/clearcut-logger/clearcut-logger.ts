@@ -5,7 +5,6 @@
  */
 
 import { Buffer } from 'buffer';
-import * as https from 'https';
 import {
   StartSessionEvent,
   EndSessionEvent,
@@ -89,53 +88,13 @@ export class ClearcutLogger {
     const eventsToSend = [...this.events];
     this.events.length = 0;
 
-    return new Promise<Buffer>((resolve, reject) => {
-      const request = [
-        {
-          log_source_name: 'CONCORD',
-          request_time_ms: Date.now(),
-          log_event: eventsToSend,
-        },
-      ];
-      const body = JSON.stringify(request);
-      const options = {
-        hostname: 'play.googleapis.com',
-        path: '/log',
-        method: 'POST',
-        headers: { 'Content-Length': Buffer.byteLength(body) },
-      };
-      const bufs: Buffer[] = [];
-      const req = https.request(options, (res) => {
-        res.on('data', (buf) => bufs.push(buf));
-        res.on('end', () => {
-          resolve(Buffer.concat(bufs));
-        });
-      });
-      req.on('error', (e) => {
-        if (this.config?.getDebugMode()) {
-          console.log('Clearcut POST request error: ', e);
-        }
-        // Add the events back to the front of the queue to be retried.
-        this.events.unshift(...eventsToSend);
-        reject(e);
-      });
-      req.end(body);
-    })
-      .then((buf: Buffer) => {
-        try {
-          this.last_flush_time = Date.now();
-          return this.decodeLogResponse(buf) || {};
-        } catch (error: unknown) {
-          console.error('Error flushing log events:', error);
-          return {};
-        }
-      })
-      .catch((error: unknown) => {
-        // Handle all errors to prevent unhandled promise rejections
-        console.error('Error flushing log events:', error);
-        // Return empty response to maintain the Promise<LogResponse> contract
-        return {};
-      });
+    this.last_flush_time = Date.now();
+    // Telemetry is disabled when using a local Ollama server. Return a resolved
+    // promise to satisfy the expected contract without making network requests.
+    if (eventsToSend.length > 0 && this.config?.getDebugMode()) {
+      console.log('Discarding telemetry events:', eventsToSend.length);
+    }
+    return Promise.resolve({});
   }
 
   // Visible for testing. Decodes protobuf-encoded response from Clearcut server.
