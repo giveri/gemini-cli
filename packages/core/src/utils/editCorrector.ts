@@ -13,9 +13,9 @@ import {
 import { GeminiClient } from '../core/client.js';
 import { EditToolParams } from '../tools/edit.js';
 import { LruCache } from './LruCache.js';
-import { DEFAULT_GEMINI_FLASH_MODEL } from '../config/models.js';
+import { getDefaultGeminiFlashModel } from '../config/models.js';
 
-const EditModel = DEFAULT_GEMINI_FLASH_MODEL;
+const EditModel = getDefaultGeminiFlashModel();
 const EditConfig: GenerateContentConfig = {
   thinkingConfig: {
     thinkingBudget: 0,

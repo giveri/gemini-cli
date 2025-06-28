@@ -74,7 +74,7 @@ describe('parseAndFormatApiError', () => {
       error: {
         code: 429,
         message:
-          "Gemini 2.5 Pro Preview doesn't have a free quota tier. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.",
+          "Gemini 2.5 Pro Preview doesn't have a free quota tier. Consult your provider's documentation for rate limit details.",
         status: 'RESOURCE_EXHAUSTED',
       },
     });

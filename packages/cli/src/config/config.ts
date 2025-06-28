@@ -14,8 +14,8 @@ import {
   getCurrentGeminiMdFilename,
   ApprovalMode,
   GEMINI_CONFIG_DIR as GEMINI_DIR,
-  DEFAULT_GEMINI_MODEL,
-  DEFAULT_GEMINI_EMBEDDING_MODEL,
+  getDefaultGeminiModel,
+  getDefaultGeminiEmbeddingModel,
   FileDiscoveryService,
   TelemetryTarget,
 } from '@google/gemini-cli-core';
@@ -61,7 +61,7 @@ async function parseArguments(): Promise<CliArgs> {
       alias: 'm',
       type: 'string',
       description: `Model`,
-      default: process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL,
+      default: process.env.GEMINI_MODEL || getDefaultGeminiModel(),
     })
     .option('prompt', {
       alias: 'p',
@@ -199,7 +199,7 @@ export async function loadCliConfig(
 
   return new Config({
     sessionId,
-    embeddingModel: DEFAULT_GEMINI_EMBEDDING_MODEL,
+    embeddingModel: getDefaultGeminiEmbeddingModel(),
     sandbox: sandboxConfig,
     targetDir: process.cwd(),
     debugMode,
@@ -294,9 +294,38 @@ function findEnvFile(startDir: string): string | null {
   }
 }
 
+function findOllamaConfig(startDir: string): string | null {
+  let currentDir = path.resolve(startDir);
+  while (true) {
+    const configPath = path.join(currentDir, '.ollama-config');
+    if (fs.existsSync(configPath)) {
+      return configPath;
+    }
+    const parentDir = path.dirname(currentDir);
+    if (parentDir === currentDir || !parentDir) {
+      const homePath = path.join(os.homedir(), '.ollama-config');
+      if (fs.existsSync(homePath)) {
+        return homePath;
+      }
+      return null;
+    }
+    currentDir = parentDir;
+  }
+}
+
 export function loadEnvironment(): void {
   const envFilePath = findEnvFile(process.cwd());
   if (envFilePath) {
     dotenv.config({ path: envFilePath });
+  }
+  loadOllamaEnvironment();
+}
+
+export function loadOllamaEnvironment(): void {
+  const ollamaPath = findOllamaConfig(process.cwd());
+  if (ollamaPath) {
+    // Use override to ensure `.ollama-config` values take precedence over
+    // existing environment variables or `.env` entries.
+    dotenv.config({ path: ollamaPath, override: true });
   }
 }
