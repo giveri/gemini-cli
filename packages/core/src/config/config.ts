@@ -24,6 +24,8 @@ import { WebFetchTool } from '../tools/web-fetch.js';
 import { ReadManyFilesTool } from '../tools/read-many-files.js';
 import { MemoryTool, setGeminiMdFilename } from '../tools/memoryTool.js';
 import { WebSearchTool } from '../tools/web-search.js';
+import { GetCwdTool } from '../tools/get-cwd.js';
+import { SetCwdTool } from '../tools/set-cwd.js';
 import { GeminiClient } from '../core/client.js';
 import { GEMINI_CONFIG_DIR as GEMINI_DIR } from '../tools/memoryTool.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
@@ -161,7 +163,7 @@ export class Config {
   private gitService: GitService | undefined = undefined;
   private readonly checkpointing: boolean;
   private readonly proxy: string | undefined;
-  private readonly cwd: string;
+  private cwd: string;
   private readonly bugCommand: BugCommandSettings | undefined;
   private readonly model: string;
   private readonly extensionContextFilePaths: string[];
@@ -428,6 +430,10 @@ export class Config {
     return this.cwd;
   }
 
+  setWorkingDir(dir: string): void {
+    this.cwd = path.resolve(dir);
+  }
+
   getBugCommand(): BugCommandSettings | undefined {
     return this.bugCommand;
   }
@@ -492,6 +498,8 @@ export function createToolRegistry(config: Config): Promise<ToolRegistry> {
   registerCoreTool(WebFetchTool, config);
   registerCoreTool(ReadManyFilesTool, targetDir, config);
   registerCoreTool(ShellTool, config);
+  registerCoreTool(GetCwdTool, config);
+  registerCoreTool(SetCwdTool, targetDir, config);
   registerCoreTool(MemoryTool);
   registerCoreTool(WebSearchTool, config);
   return (async () => {

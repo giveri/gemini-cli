@@ -28,7 +28,7 @@ import {
   ApprovalMode,
   Config,
   EditTool,
-  ShellTool,
+  ShellTool as _ShellTool,
   WriteFileTool,
   sessionId,
   logUserPrompt,

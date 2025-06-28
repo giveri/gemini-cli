@@ -28,11 +28,12 @@ export class CreateFolderTool extends BaseTool<CreateFolderParams, ToolResult> {
     super(
       CreateFolderTool.Name,
       'CreateFolder',
-      'Creates a directory (recursively) at the given absolute path.',
+      'Creates a directory (recursively) at the given path. Relative paths are resolved against the current working directory.',
       {
         properties: {
           path: {
-            description: 'The absolute path to the directory to create.',
+            description:
+              'Absolute or relative path to the directory to create.',
             type: 'string',
           },
         },
@@ -65,23 +66,26 @@ export class CreateFolderTool extends BaseTool<CreateFolderParams, ToolResult> {
     ) {
       return 'Parameters failed schema validation.';
     }
-    if (!path.isAbsolute(params.path)) {
-      return `Path must be absolute: ${params.path}`;
-    }
+    const absPath = path.isAbsolute(params.path)
+      ? params.path
+      : path.resolve(this.config.getWorkingDir(), params.path);
     if (
-      !this.isWithinRoot(params.path) &&
+      !this.isWithinRoot(absPath) &&
       this.config.getApprovalMode() !== ApprovalMode.YOLO
     ) {
-      return `Path must be within the root directory (${this.rootDirectory}): ${params.path}`;
+      return `Path must be within the root directory (${this.rootDirectory}): ${absPath}`;
     }
     return null;
   }
 
   getDescription(params: CreateFolderParams): string {
-    const relativePath = makeRelative(params.path, this.rootDirectory);
-    const display = this.isWithinRoot(params.path)
+    const absPath = path.isAbsolute(params.path)
+      ? params.path
+      : path.resolve(this.config.getWorkingDir(), params.path);
+    const relativePath = makeRelative(absPath, this.rootDirectory);
+    const display = this.isWithinRoot(absPath)
       ? shortenPath(relativePath)
-      : params.path;
+      : absPath;
     return `Creating directory ${display}`;
   }
 
@@ -94,6 +98,9 @@ export class CreateFolderTool extends BaseTool<CreateFolderParams, ToolResult> {
 
   async execute(params: CreateFolderParams): Promise<ToolResult> {
     const validationError = this.validateToolParams(params);
+    const absPath = path.isAbsolute(params.path)
+      ? params.path
+      : path.resolve(this.config.getWorkingDir(), params.path);
     if (validationError) {
       return {
         llmContent: `Error: ${validationError}`,
@@ -101,10 +108,10 @@ export class CreateFolderTool extends BaseTool<CreateFolderParams, ToolResult> {
       };
     }
     try {
-      fs.mkdirSync(params.path, { recursive: true });
+      fs.mkdirSync(absPath, { recursive: true });
       return {
-        llmContent: `Created directory: ${params.path}`,
-        returnDisplay: `Created directory: ${params.path}`,
+        llmContent: `Created directory: ${absPath}`,
+        returnDisplay: `Created directory: ${absPath}`,
       };
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
