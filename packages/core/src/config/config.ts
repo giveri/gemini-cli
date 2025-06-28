@@ -26,6 +26,11 @@ import { MemoryTool, setGeminiMdFilename } from '../tools/memoryTool.js';
 import { WebSearchTool } from '../tools/web-search.js';
 import { GetCwdTool } from '../tools/get-cwd.js';
 import { SetCwdTool } from '../tools/set-cwd.js';
+import {
+  EnqueueTaskTool,
+  ListTasksTool,
+  CompleteTaskTool,
+} from '../tools/queue.js';
 import { GeminiClient } from '../core/client.js';
 import { GEMINI_CONFIG_DIR as GEMINI_DIR } from '../tools/memoryTool.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
@@ -500,6 +505,9 @@ export function createToolRegistry(config: Config): Promise<ToolRegistry> {
   registerCoreTool(ShellTool, config);
   registerCoreTool(GetCwdTool, config);
   registerCoreTool(SetCwdTool, targetDir, config);
+  registerCoreTool(EnqueueTaskTool);
+  registerCoreTool(ListTasksTool);
+  registerCoreTool(CompleteTaskTool);
   registerCoreTool(MemoryTool);
   registerCoreTool(WebSearchTool, config);
   return (async () => {

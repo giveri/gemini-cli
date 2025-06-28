@@ -56,6 +56,7 @@ export * from './tools/mcp-client.js';
 export * from './tools/mcp-tool.js';
 export * from './tools/get-cwd.js';
 export * from './tools/set-cwd.js';
+export * from './tools/queue.js';
 
 // Export telemetry functions
 export * from './telemetry/index.js';
