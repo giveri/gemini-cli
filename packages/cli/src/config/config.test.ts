@@ -202,7 +202,7 @@ describe('loadCliConfig telemetry', () => {
   it('should prioritize --telemetry-target CLI flag over settings', async () => {
     process.argv = ['node', 'script.js', '--telemetry-target', 'local'];
     const settings: Settings = {
-      telemetry: { target: 'other' as any },
+      telemetry: { target: 'other' as unknown as ServerConfig.TelemetryTarget },
     };
     const config = await loadCliConfig(settings, [], 'test-session');
     expect(config.getTelemetryTarget()).toBe('local');
