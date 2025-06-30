@@ -35,6 +35,7 @@ export function AuthDialog({
     },
     { label: 'Gemini API Key', value: AuthType.USE_GEMINI },
     { label: 'Vertex AI', value: AuthType.USE_VERTEX_AI },
+    { label: 'Ollama', value: AuthType.USE_OLLAMA },
   ];
 
   let initialAuthIndex = items.findIndex(
@@ -98,7 +99,7 @@ export function AuthDialog({
       <Box marginTop={1}>
         <Text color={Colors.AccentBlue}>
           {
-            'https://github.com/google-gemini/gemini-cli/blob/main/docs/tos-privacy.md'
+            'https://github.com/gemini-cli/gemini-cli/blob/main/docs/tos-privacy.md'
           }
         </Text>
       </Box>

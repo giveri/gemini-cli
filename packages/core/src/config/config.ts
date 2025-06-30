@@ -19,10 +19,18 @@ import { GlobTool } from '../tools/glob.js';
 import { EditTool } from '../tools/edit.js';
 import { ShellTool } from '../tools/shell.js';
 import { WriteFileTool } from '../tools/write-file.js';
+import { CreateFolderTool } from '../tools/create-folder.js';
 import { WebFetchTool } from '../tools/web-fetch.js';
 import { ReadManyFilesTool } from '../tools/read-many-files.js';
 import { MemoryTool, setGeminiMdFilename } from '../tools/memoryTool.js';
 import { WebSearchTool } from '../tools/web-search.js';
+import { GetCwdTool } from '../tools/get-cwd.js';
+import { SetCwdTool } from '../tools/set-cwd.js';
+import {
+  EnqueueTaskTool,
+  ListTasksTool,
+  CompleteTaskTool,
+} from '../tools/queue.js';
 import { GeminiClient } from '../core/client.js';
 import { GEMINI_CONFIG_DIR as GEMINI_DIR } from '../tools/memoryTool.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
@@ -36,8 +44,8 @@ import {
   StartSessionEvent,
 } from '../telemetry/index.js';
 import {
-  DEFAULT_GEMINI_EMBEDDING_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
+  getDefaultGeminiEmbeddingModel,
+  getDefaultGeminiFlashModel,
 } from './models.js';
 import { ClearcutLogger } from '../telemetry/clearcut-logger/clearcut-logger.js';
 
@@ -160,7 +168,7 @@ export class Config {
   private gitService: GitService | undefined = undefined;
   private readonly checkpointing: boolean;
   private readonly proxy: string | undefined;
-  private readonly cwd: string;
+  private cwd: string;
   private readonly bugCommand: BugCommandSettings | undefined;
   private readonly model: string;
   private readonly extensionContextFilePaths: string[];
@@ -170,7 +178,7 @@ export class Config {
   constructor(params: ConfigParameters) {
     this.sessionId = params.sessionId;
     this.embeddingModel =
-      params.embeddingModel ?? DEFAULT_GEMINI_EMBEDDING_MODEL;
+      params.embeddingModel ?? getDefaultGeminiEmbeddingModel();
     this.sandbox = params.sandbox;
     this.targetDir = path.resolve(params.targetDir);
     this.debugMode = params.debugMode;
@@ -427,6 +435,10 @@ export class Config {
     return this.cwd;
   }
 
+  setWorkingDir(dir: string): void {
+    this.cwd = path.resolve(dir);
+  }
+
   getBugCommand(): BugCommandSettings | undefined {
     return this.bugCommand;
   }
@@ -487,9 +499,15 @@ export function createToolRegistry(config: Config): Promise<ToolRegistry> {
   registerCoreTool(GlobTool, targetDir, config);
   registerCoreTool(EditTool, config);
   registerCoreTool(WriteFileTool, config);
+  registerCoreTool(CreateFolderTool, targetDir, config);
   registerCoreTool(WebFetchTool, config);
   registerCoreTool(ReadManyFilesTool, targetDir, config);
   registerCoreTool(ShellTool, config);
+  registerCoreTool(GetCwdTool, config);
+  registerCoreTool(SetCwdTool, targetDir, config);
+  registerCoreTool(EnqueueTaskTool);
+  registerCoreTool(ListTasksTool);
+  registerCoreTool(CompleteTaskTool);
   registerCoreTool(MemoryTool);
   registerCoreTool(WebSearchTool, config);
   return (async () => {
@@ -498,5 +516,5 @@ export function createToolRegistry(config: Config): Promise<ToolRegistry> {
   })();
 }
 
-// Export model constants for use in CLI
-export { DEFAULT_GEMINI_FLASH_MODEL };
+// Export model getter for use in CLI
+export { getDefaultGeminiFlashModel };

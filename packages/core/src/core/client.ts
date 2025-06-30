@@ -12,6 +12,7 @@ import {
   PartListUnion,
   Content,
   Tool,
+  FunctionDeclaration,
   GenerateContentResponse,
 } from '@google/genai';
 import { getFolderStructure } from '../utils/getFolderStructure.js';
@@ -37,8 +38,19 @@ import {
   createContentGenerator,
 } from './contentGenerator.js';
 import { ProxyAgent, setGlobalDispatcher } from 'undici';
-import { DEFAULT_GEMINI_FLASH_MODEL } from '../config/models.js';
+import { getDefaultGeminiFlashModel } from '../config/models.js';
 import { AuthType } from './contentGenerator.js';
+
+function toOpenAITools(decls: FunctionDeclaration[]): unknown[] {
+  return decls.map((d) => ({
+    type: 'function',
+    function: {
+      name: d.name,
+      description: d.description,
+      parameters: d.parameters,
+    },
+  }));
+}
 
 function isThinkingSupported(model: string) {
   if (model.startsWith('gemini-2.5')) return true;
@@ -170,7 +182,7 @@ export class GeminiClient {
     const envParts = await this.getEnvironment();
     const toolRegistry = await this.config.getToolRegistry();
     const toolDeclarations = toolRegistry.getFunctionDeclarations();
-    const tools: Tool[] = [{ functionDeclarations: toolDeclarations }];
+    const tools = toOpenAITools(toolDeclarations) as unknown as Tool[];
     const initialHistory: Content[] = [
       {
         role: 'user',
@@ -193,14 +205,17 @@ export class GeminiClient {
             },
           }
         : this.generateContentConfig;
+      const genConfig: Record<string, unknown> = {
+        systemInstruction,
+        ...generateContentConfigWithThinking,
+        tools,
+        tool_choice: 'auto',
+        response_format: { type: 'json_object' },
+      };
       return new GeminiChat(
         this.config,
         this.getContentGenerator(),
-        {
-          systemInstruction,
-          ...generateContentConfigWithThinking,
-          tools,
-        },
+        genConfig,
         history,
       );
     } catch (error) {
@@ -252,7 +267,7 @@ export class GeminiClient {
     contents: Content[],
     schema: SchemaUnion,
     abortSignal: AbortSignal,
-    model: string = DEFAULT_GEMINI_FLASH_MODEL,
+    model: string = getDefaultGeminiFlashModel(),
     config: GenerateContentConfig = {},
   ): Promise<Record<string, unknown>> {
     try {
@@ -264,15 +279,22 @@ export class GeminiClient {
         ...config,
       };
 
+      const toolRegistry = await this.config.getToolRegistry();
+      const toolDeclarations = toolRegistry.getFunctionDeclarations();
+      const tools = toOpenAITools(toolDeclarations) as unknown as Tool[];
+      const genConfig: Record<string, unknown> = {
+        ...requestConfig,
+        systemInstruction,
+        responseSchema: schema,
+        responseMimeType: 'application/json',
+        tools,
+        tool_choice: 'auto',
+        response_format: { type: 'json_object' },
+      };
       const apiCall = () =>
         this.getContentGenerator().generateContent({
           model,
-          config: {
-            ...requestConfig,
-            systemInstruction,
-            responseSchema: schema,
-            responseMimeType: 'application/json',
-          },
+          config: genConfig,
           contents,
         });
 
@@ -298,18 +320,26 @@ export class GeminiClient {
       try {
         return JSON.parse(text);
       } catch (parseError) {
-        await reportError(
-          parseError,
-          'Failed to parse JSON response from generateJson.',
-          {
-            responseTextFailedToParse: text,
-            originalRequestContents: contents,
-          },
-          'generateJson-parse',
-        );
-        throw new Error(
-          `Failed to parse API response as JSON: ${getErrorMessage(parseError)}`,
-        );
+        const trimmed = text
+          .trim()
+          .replace(/^```(?:json)?\n/, '')
+          .replace(/```\s*$/, '');
+        try {
+          return JSON.parse(trimmed);
+        } catch {
+          await reportError(
+            parseError,
+            'Failed to parse JSON response from generateJson.',
+            {
+              responseTextFailedToParse: text,
+              originalRequestContents: contents,
+            },
+            'generateJson-parse',
+          );
+          throw new Error(
+            `Failed to parse API response as JSON: ${getErrorMessage(parseError)}`,
+          );
+        }
       }
     } catch (error) {
       if (abortSignal.aborted) {
@@ -357,10 +387,19 @@ export class GeminiClient {
         systemInstruction,
       };
 
+      const toolRegistry = await this.config.getToolRegistry();
+      const toolDeclarations = toolRegistry.getFunctionDeclarations();
+      const tools = toOpenAITools(toolDeclarations) as unknown as Tool[];
+      const genConfig: Record<string, unknown> = {
+        ...requestConfig,
+        tools,
+        tool_choice: 'auto',
+        response_format: { type: 'json_object' },
+      };
       const apiCall = () =>
         this.getContentGenerator().generateContent({
           model: modelToUse,
-          config: requestConfig,
+          config: genConfig,
           contents,
         });
 
@@ -509,7 +548,7 @@ export class GeminiClient {
     }
 
     const currentModel = this.model;
-    const fallbackModel = DEFAULT_GEMINI_FLASH_MODEL;
+    const fallbackModel = getDefaultGeminiFlashModel();
 
     // Don't fallback if already using Flash model
     if (currentModel === fallbackModel) {

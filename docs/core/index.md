@@ -1,6 +1,6 @@
 # Gemini CLI Core
 
-Gemini CLI's core package (`packages/core`) is the backend portion of Gemini CLI, handling communication with the Gemini API, managing tools, and processing requests sent from `packages/cli`. For a general overview of Gemini CLI, see the [main documentation page](../index.md).
+Gemini CLI's core package (`packages/core`) is the backend portion of Gemini CLI, handling communication with a local Ollama API, managing tools, and processing requests sent from `packages/cli`. For a general overview of Gemini CLI, see the [main documentation page](../index.md).
 
 ## Navigating this section
 
@@ -10,7 +10,7 @@ Gemini CLI's core package (`packages/core`) is the backend portion of Gemini CLI
 
 While the `packages/cli` portion of Gemini CLI provides the user interface, `packages/core` is responsible for:
 
-- **Gemini API interaction:** Securely communicating with the Google Gemini API, sending user prompts, and receiving model responses.
+- **Model API interaction:** Communicating with your local Ollama server, sending user prompts, and receiving model responses.
 - **Prompt engineering:** Constructing effective prompts for the Gemini model, potentially incorporating conversation history, tool definitions, and instructional context from `GEMINI.md` files.
 - **Tool management & orchestration:**
   - Registering available tools (e.g., file system tools, shell command execution).
@@ -24,7 +24,7 @@ While the `packages/cli` portion of Gemini CLI provides the user interface, `pac
 
 The core plays a vital role in security:
 
-- **API key management:** It handles the `GEMINI_API_KEY` and ensures it's used securely when communicating with the Gemini API.
+- **API key management:** When using the remote Gemini API, the core manages the `GEMINI_API_KEY` securely. Local Ollama setups do not require this key.
 - **Tool execution:** When tools interact with the local system (e.g., `run_shell_command`), the core (and its underlying tool implementations) must do so with appropriate caution, often involving sandboxing mechanisms to prevent unintended modifications.
 
 ## Chat history compression
@@ -33,7 +33,7 @@ To ensure that long conversations don't exceed the token limits of the Gemini mo
 
 When a conversation approaches the token limit for the configured model, the core automatically compresses the conversation history before sending it to the model. This compression is designed to be lossless in terms of the information conveyed, but it reduces the overall number of tokens used.
 
-You can find the token limits for each model in the [Google AI documentation](https://ai.google.dev/gemini-api/docs/models).
+You can find the token limits for each model in the [Ollama documentation](https://github.com/jmorganca/ollama).
 
 ## Model fallback
 

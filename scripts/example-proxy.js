@@ -16,7 +16,7 @@ import { URL } from 'url';
 import console from 'console';
 
 const PROXY_PORT = 8877;
-const ALLOWED_DOMAINS = ['example.com', 'googleapis.com'];
+const ALLOWED_DOMAINS = ['example.com'];
 const ALLOWED_PORT = '443';
 
 const server = http.createServer((req, res) => {

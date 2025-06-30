@@ -25,7 +25,7 @@ The discovery process is orchestrated by `discoverMcpTools()`, which:
 1. **Iterates through configured servers** from your `settings.json` `mcpServers` configuration
 2. **Establishes connections** using appropriate transport mechanisms (Stdio, SSE, or Streamable HTTP)
 3. **Fetches tool definitions** from each server using the MCP protocol
-4. **Sanitizes and validates** tool schemas for compatibility with the Gemini API
+4. **Sanitizes and validates** tool schemas for compatibility with the Ollama API
 5. **Registers tools** in the global tool registry with conflict resolution
 
 ### Execution Layer (`mcp-tool.ts`)
@@ -188,7 +188,7 @@ Upon successful connection:
 
 1. **Tool listing:** The client calls the MCP server's tool listing endpoint
 2. **Schema validation:** Each tool's function declaration is validated
-3. **Name sanitization:** Tool names are cleaned to meet Gemini API requirements:
+3. **Name sanitization:** Tool names are cleaned to meet Ollama API requirements:
    - Invalid characters (non-alphanumeric, underscore, dot, hyphen) are replaced with underscores
    - Names longer than 63 characters are truncated with middle replacement (`___`)
 
@@ -202,7 +202,7 @@ When multiple servers expose tools with the same name:
 
 ### 4. Schema Processing
 
-Tool parameter schemas undergo sanitization for Gemini API compatibility:
+Tool parameter schemas undergo sanitization for Ollama API compatibility:
 
 - **`$schema` properties** are removed
 - **`additionalProperties`** are stripped
@@ -421,7 +421,7 @@ The MCP integration tracks several states:
 
 ### Schema Compatibility
 
-- **Property stripping:** The system automatically removes certain schema properties (`$schema`, `additionalProperties`) for Gemini API compatibility
+- **Property stripping:** The system automatically removes certain schema properties (`$schema`, `additionalProperties`) for Ollama API compatibility
 - **Name sanitization:** Tool names are automatically sanitized to meet API requirements
 - **Conflict resolution:** Tool name conflicts between servers are resolved through automatic prefixing
 

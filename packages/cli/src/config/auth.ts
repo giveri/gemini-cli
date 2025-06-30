@@ -5,7 +5,7 @@
  */
 
 import { AuthType } from '@google/gemini-cli-core';
-import { loadEnvironment } from './config.js';
+import { loadEnvironment, loadOllamaEnvironment } from './config.js';
 
 export const validateAuthMethod = (authMethod: string): string | null => {
   loadEnvironment();
@@ -31,6 +31,14 @@ export const validateAuthMethod = (authMethod: string): string | null => {
         '• GOOGLE_API_KEY environment variable (if using express mode).\n' +
         'Update your .env and try again, no reload needed!'
       );
+    }
+    return null;
+  }
+
+  if (authMethod === AuthType.USE_OLLAMA) {
+    loadOllamaEnvironment();
+    if (!process.env.AI_CHAT_BASE_URL || !process.env.AI_CHAT_MODEL) {
+      return 'Missing AI_CHAT_BASE_URL or AI_CHAT_MODEL in .ollama-config. Add them and try again.';
     }
     return null;
   }
