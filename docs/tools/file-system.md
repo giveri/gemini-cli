@@ -101,16 +101,16 @@ The Gemini CLI provides a comprehensive suite of tools for interacting with the 
 
 ## 4. `create_folder` (CreateFolder)
 
-`create_folder` creates a directory at the specified absolute path. Missing parent directories are created automatically.
+`create_folder` creates a directory at the specified path. If the path is outside the project root, it will be created inside the root instead. Missing parent directories are created automatically.
 
 - **Tool name:** `create_folder`
 - **Display name:** CreateFolder
 - **File:** `create-folder.ts`
 - **Parameters:**
-  - `path` (string, required): The absolute path of the directory to create.
+  - `path` (string, required): The absolute or relative path of the directory to create. Paths outside the project root are re-rooted within it.
 - **Behavior:**
   - Creates the directory and any missing parent directories.
-  - Paths outside the project root are normally rejected, but in `--yolo` mode this safety check is skipped.
+  - Absolute paths outside the project root are automatically re-rooted within the project, unless running in `--yolo` mode, which disables the safety check.
 - **Output (`llmContent`):** `Created directory: /path/to/dir` on success.
 - **Confirmation:** No.
 

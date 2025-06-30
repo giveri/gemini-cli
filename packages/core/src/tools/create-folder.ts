@@ -28,7 +28,7 @@ export class CreateFolderTool extends BaseTool<CreateFolderParams, ToolResult> {
     super(
       CreateFolderTool.Name,
       'CreateFolder',
-      'Creates a directory (recursively) at the given path. Relative paths are resolved against the current working directory.',
+      'Creates a directory (recursively) at the given path. Paths outside the project root are automatically re-rooted within it.',
       {
         properties: {
           path: {
@@ -66,9 +66,15 @@ export class CreateFolderTool extends BaseTool<CreateFolderParams, ToolResult> {
     ) {
       return 'Parameters failed schema validation.';
     }
-    const absPath = path.isAbsolute(params.path)
+    let absPath = path.isAbsolute(params.path)
       ? params.path
       : path.resolve(this.config.getWorkingDir(), params.path);
+    if (!this.isWithinRoot(absPath)) {
+      absPath = path.resolve(
+        this.rootDirectory,
+        params.path.replace(/^[/\\]/, ''),
+      );
+    }
     if (
       !this.isWithinRoot(absPath) &&
       this.config.getApprovalMode() !== ApprovalMode.YOLO
@@ -98,9 +104,15 @@ export class CreateFolderTool extends BaseTool<CreateFolderParams, ToolResult> {
 
   async execute(params: CreateFolderParams): Promise<ToolResult> {
     const validationError = this.validateToolParams(params);
-    const absPath = path.isAbsolute(params.path)
+    let absPath = path.isAbsolute(params.path)
       ? params.path
       : path.resolve(this.config.getWorkingDir(), params.path);
+    if (!this.isWithinRoot(absPath)) {
+      absPath = path.resolve(
+        this.rootDirectory,
+        params.path.replace(/^[/\\]/, ''),
+      );
+    }
     if (validationError) {
       return {
         llmContent: `Error: ${validationError}`,
