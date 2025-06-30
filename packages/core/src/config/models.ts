@@ -18,6 +18,7 @@ export function getDefaultGeminiFlashModel(): string {
 
 export function getDefaultGeminiEmbeddingModel(): string {
   return (
-    process.env.DEFAULT_GEMINI_EMBEDDING_MODEL || FALLBACK_GEMINI_EMBEDDING_MODEL
+    process.env.DEFAULT_GEMINI_EMBEDDING_MODEL ||
+    FALLBACK_GEMINI_EMBEDDING_MODEL
   );
 }

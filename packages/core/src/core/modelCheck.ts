@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-
 /**
  * Checks if the default "pro" model is rate-limited and returns a fallback "flash"
  * model if necessary. This function is designed to be silent.

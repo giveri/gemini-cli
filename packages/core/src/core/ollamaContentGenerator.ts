@@ -174,19 +174,28 @@ export class OllamaContentGenerator {
     const messages = this.convertContents(contents as Content[]);
     const req = request as unknown as {
       config?: {
-        tools?: Array<{ functionDeclarations?: FunctionDeclaration[] }>;
+        tools?: unknown[];
+        tool_choice?: string;
+        response_format?: { type: 'json_object' };
       };
     };
-    const toolsDecls = req.config?.tools?.[0]?.functionDeclarations || [];
+    const tools = req.config?.tools ?? [];
     const body: OllamaRequest = {
       model: this.model,
       messages,
       stream: false,
-      response_format: { type: 'json_object' },
+      response_format: req.config?.response_format ?? { type: 'json_object' },
     };
-    if (toolsDecls.length > 0) {
-      body.tools = this.convertTools(toolsDecls);
-      body.tool_choice = 'auto';
+    if (tools.length > 0) {
+      const first = tools[0] as unknown as {
+        functionDeclarations?: FunctionDeclaration[];
+      };
+      if (first && first.functionDeclarations) {
+        body.tools = this.convertTools(first.functionDeclarations);
+      } else {
+        body.tools = tools as unknown[];
+      }
+      body.tool_choice = req.config?.tool_choice ?? 'auto';
     }
     const json = await this.callApi(body);
     return this.convertResponse(json);

@@ -12,6 +12,7 @@ import {
   PartListUnion,
   Content,
   Tool,
+  FunctionDeclaration,
   GenerateContentResponse,
 } from '@google/genai';
 import { getFolderStructure } from '../utils/getFolderStructure.js';
@@ -39,6 +40,17 @@ import {
 import { ProxyAgent, setGlobalDispatcher } from 'undici';
 import { getDefaultGeminiFlashModel } from '../config/models.js';
 import { AuthType } from './contentGenerator.js';
+
+function toOpenAITools(decls: FunctionDeclaration[]): unknown[] {
+  return decls.map((d) => ({
+    type: 'function',
+    function: {
+      name: d.name,
+      description: d.description,
+      parameters: d.parameters,
+    },
+  }));
+}
 
 function isThinkingSupported(model: string) {
   if (model.startsWith('gemini-2.5')) return true;
@@ -170,7 +182,7 @@ export class GeminiClient {
     const envParts = await this.getEnvironment();
     const toolRegistry = await this.config.getToolRegistry();
     const toolDeclarations = toolRegistry.getFunctionDeclarations();
-    const tools: Tool[] = [{ functionDeclarations: toolDeclarations }];
+    const tools = toOpenAITools(toolDeclarations) as unknown as Tool[];
     const initialHistory: Content[] = [
       {
         role: 'user',
@@ -193,14 +205,17 @@ export class GeminiClient {
             },
           }
         : this.generateContentConfig;
+      const genConfig: Record<string, unknown> = {
+        systemInstruction,
+        ...generateContentConfigWithThinking,
+        tools,
+        tool_choice: 'auto',
+        response_format: { type: 'json_object' },
+      };
       return new GeminiChat(
         this.config,
         this.getContentGenerator(),
-        {
-          systemInstruction,
-          ...generateContentConfigWithThinking,
-          tools,
-        },
+        genConfig,
         history,
       );
     } catch (error) {
@@ -266,17 +281,20 @@ export class GeminiClient {
 
       const toolRegistry = await this.config.getToolRegistry();
       const toolDeclarations = toolRegistry.getFunctionDeclarations();
-      const tools: Tool[] = [{ functionDeclarations: toolDeclarations }];
+      const tools = toOpenAITools(toolDeclarations) as unknown as Tool[];
+      const genConfig: Record<string, unknown> = {
+        ...requestConfig,
+        systemInstruction,
+        responseSchema: schema,
+        responseMimeType: 'application/json',
+        tools,
+        tool_choice: 'auto',
+        response_format: { type: 'json_object' },
+      };
       const apiCall = () =>
         this.getContentGenerator().generateContent({
           model,
-          config: {
-            ...requestConfig,
-            systemInstruction,
-            responseSchema: schema,
-            responseMimeType: 'application/json',
-            tools,
-          },
+          config: genConfig,
           contents,
         });
 
@@ -371,11 +389,17 @@ export class GeminiClient {
 
       const toolRegistry = await this.config.getToolRegistry();
       const toolDeclarations = toolRegistry.getFunctionDeclarations();
-      const tools: Tool[] = [{ functionDeclarations: toolDeclarations }];
+      const tools = toOpenAITools(toolDeclarations) as unknown as Tool[];
+      const genConfig: Record<string, unknown> = {
+        ...requestConfig,
+        tools,
+        tool_choice: 'auto',
+        response_format: { type: 'json_object' },
+      };
       const apiCall = () =>
         this.getContentGenerator().generateContent({
           model: modelToUse,
-          config: { ...requestConfig, tools },
+          config: genConfig,
           contents,
         });
 
