@@ -187,7 +187,24 @@ The Gemini CLI provides a comprehensive suite of tools for interacting with the 
 - **Confirmation:** No.
 - **Confirmation:** No.
 
-## 7. `replace` (Edit)
+## 7. `search_text` (SearchText)
+
+`search_text` finds files containing a given text or regular expression.
+
+- **Tool name:** `search_text`
+- **Display name:** SearchText
+- **File:** `search-text.ts`
+- **Parameters:**
+  - `pattern` (string, required): Regex or literal text to search for.
+  - `ignoreCase` (boolean, optional): Whether to ignore case. Defaults to `true`.
+  - `maxResults` (integer, optional): Maximum number of results to return. Defaults to `100`.
+- **Behavior:**
+  - Scans project files (`*.js, *.ts, *.jsx, *.tsx, *.json, *.md`), ignoring `node_modules` and `.git`.
+  - Returns a list of file paths containing the pattern.
+- **Output (`llmContent`):** For example: `Found 3 file(s) containing "foo":\nsrc/a.ts\nsrc/b.ts`.
+- **Confirmation:** No.
+
+## 8. `replace` (Edit)
 
 `replace` replaces text within a file. By default, replaces a single occurrence, but can replace multiple occurrences when `expected_replacements` is specified. This tool is designed for precise, targeted changes and requires significant context around the `old_string` to ensure it modifies the correct location.
 
