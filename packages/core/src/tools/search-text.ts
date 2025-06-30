@@ -52,7 +52,10 @@ export class SearchTextTool extends BaseTool<SearchTextParams, ToolResult> {
     this.rootDirectory = path.resolve(rootDirectory);
   }
 
-  validateToolParams(params: SearchTextParams): string | null {
+  validateToolParams(params: SearchTextParams | string): string | null {
+    if (typeof params === 'string') {
+      params = { pattern: params };
+    }
     if (
       this.schema.parameters &&
       !SchemaValidator.validate(
@@ -70,7 +73,7 @@ export class SearchTextTool extends BaseTool<SearchTextParams, ToolResult> {
   }
 
   async execute(
-    params: SearchTextParams,
+    params: SearchTextParams | string,
     _signal: AbortSignal,
   ): Promise<ToolResult> {
     const validationError = this.validateToolParams(params);
@@ -79,6 +82,9 @@ export class SearchTextTool extends BaseTool<SearchTextParams, ToolResult> {
         llmContent: `Error: ${validationError}`,
         returnDisplay: validationError,
       };
+    }
+    if (typeof params === 'string') {
+      params = { pattern: params };
     }
     const re = new RegExp(
       params.pattern,

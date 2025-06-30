@@ -141,9 +141,15 @@ export class LSTool extends BaseTool<LSToolParams, ToolResult> {
     ) {
       return 'Parameters failed schema validation.';
     }
-    const absPath = path.isAbsolute(params.path)
+    let absPath = path.isAbsolute(params.path)
       ? params.path
       : path.resolve(this.config.getWorkingDir(), params.path);
+    if (!this.isWithinRoot(absPath)) {
+      absPath = path.resolve(
+        this.rootDirectory,
+        params.path.replace(/^[/\\]/, ''),
+      );
+    }
     if (
       !this.isWithinRoot(absPath) &&
       this.config.getApprovalMode() !== ApprovalMode.YOLO
@@ -183,9 +189,15 @@ export class LSTool extends BaseTool<LSToolParams, ToolResult> {
    * @returns A string describing the file being read
    */
   getDescription(params: LSToolParams): string {
-    const absPath = path.isAbsolute(params.path)
+    let absPath = path.isAbsolute(params.path)
       ? params.path
       : path.resolve(this.config.getWorkingDir(), params.path);
+    if (!this.isWithinRoot(absPath)) {
+      absPath = path.resolve(
+        this.rootDirectory,
+        params.path.replace(/^[/\\]/, ''),
+      );
+    }
     const relativePath = makeRelative(absPath, this.rootDirectory);
     return shortenPath(relativePath);
   }
@@ -216,9 +228,15 @@ export class LSTool extends BaseTool<LSToolParams, ToolResult> {
       );
     }
 
-    const absPath = path.isAbsolute(params.path)
+    let absPath = path.isAbsolute(params.path)
       ? params.path
       : path.resolve(this.config.getWorkingDir(), params.path);
+    if (!this.isWithinRoot(absPath)) {
+      absPath = path.resolve(
+        this.rootDirectory,
+        params.path.replace(/^[/\\]/, ''),
+      );
+    }
     try {
       const stats = fs.statSync(absPath);
       if (!stats) {
