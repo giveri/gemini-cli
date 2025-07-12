@@ -101,16 +101,16 @@ The Gemini CLI provides a comprehensive suite of tools for interacting with the 
 
 ## 4. `create_folder` (CreateFolder)
 
-`create_folder` creates a directory at the specified absolute path. Missing parent directories are created automatically.
+`create_folder` creates a directory at the specified path. If the path is outside the project root, it will be created inside the root instead. Missing parent directories are created automatically.
 
 - **Tool name:** `create_folder`
 - **Display name:** CreateFolder
 - **File:** `create-folder.ts`
 - **Parameters:**
-  - `path` (string, required): The absolute path of the directory to create.
+  - `path` (string, required): The absolute or relative path of the directory to create. Paths outside the project root are re-rooted within it.
 - **Behavior:**
   - Creates the directory and any missing parent directories.
-  - Paths outside the project root are normally rejected, but in `--yolo` mode this safety check is skipped.
+  - Absolute paths outside the project root are automatically re-rooted within the project, unless running in `--yolo` mode, which disables the safety check.
 - **Output (`llmContent`):** `Created directory: /path/to/dir` on success.
 - **Confirmation:** No.
 
@@ -187,7 +187,24 @@ The Gemini CLI provides a comprehensive suite of tools for interacting with the 
 - **Confirmation:** No.
 - **Confirmation:** No.
 
-## 7. `replace` (Edit)
+## 7. `search_text` (SearchText)
+
+`search_text` finds files containing a given text or regular expression.
+
+- **Tool name:** `search_text`
+- **Display name:** SearchText
+- **File:** `search-text.ts`
+- **Parameters:**
+  - `pattern` (string, required): Regex or literal text to search for.
+  - `ignoreCase` (boolean, optional): Whether to ignore case. Defaults to `true`.
+  - `maxResults` (integer, optional): Maximum number of results to return. Defaults to `100`.
+- **Behavior:**
+  - Scans project files (`*.js, *.ts, *.jsx, *.tsx, *.json, *.md`), ignoring `node_modules` and `.git`.
+  - Returns a list of file paths containing the pattern.
+- **Output (`llmContent`):** For example: `Found 3 file(s) containing "foo":\nsrc/a.ts\nsrc/b.ts`.
+- **Confirmation:** No.
+
+## 8. `replace` (Edit)
 
 `replace` replaces text within a file. By default, replaces a single occurrence, but can replace multiple occurrences when `expected_replacements` is specified. This tool is designed for precise, targeted changes and requires significant context around the `old_string` to ensure it modifies the correct location.
 

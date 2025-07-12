@@ -71,7 +71,7 @@ In addition to a project settings file, a project's `.gemini` directory can cont
 
   - **Description:** Allows you to specify a list of core tool names that should be made available to the model. This can be used to restrict the set of built-in tools. See [Built-in Tools](../core/tools-api.md#built-in-tools) for a list of core tools.
   - **Default:** All tools available for use by the Gemini model.
-  - **Example:** `"coreTools": ["ReadFileTool", "GlobTool", "SearchText"]`.
+  - **Example:** `"coreTools": ["ReadFileTool", "GlobTool", "SearchTextTool"]`.
 
 - **`excludeTools`** (array of strings):
 

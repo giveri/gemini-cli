@@ -5,7 +5,6 @@
  */
 
 import * as path from 'node:path';
-import process from 'node:process';
 import {
   AuthType,
   ContentGeneratorConfig,
@@ -15,6 +14,7 @@ import { ToolRegistry } from '../tools/tool-registry.js';
 import { LSTool } from '../tools/ls.js';
 import { ReadFileTool } from '../tools/read-file.js';
 import { GrepTool } from '../tools/grep.js';
+import { SearchTextTool } from '../tools/search-text.js';
 import { GlobTool } from '../tools/glob.js';
 import { EditTool } from '../tools/edit.js';
 import { ShellTool } from '../tools/shell.js';
@@ -48,6 +48,7 @@ import {
   getDefaultGeminiFlashModel,
 } from './models.js';
 import { ClearcutLogger } from '../telemetry/clearcut-logger/clearcut-logger.js';
+import { session } from '../session.js';
 
 export enum ApprovalMode {
   DEFAULT = 'default',
@@ -210,7 +211,7 @@ export class Config {
     };
     this.checkpointing = params.checkpointing ?? false;
     this.proxy = params.proxy;
-    this.cwd = params.cwd ?? process.cwd();
+    this.cwd = params.cwd ?? session.cwd;
     this.fileDiscoveryService = params.fileDiscoveryService ?? null;
     this.bugCommand = params.bugCommand;
     this.model = params.model;
@@ -432,11 +433,12 @@ export class Config {
   }
 
   getWorkingDir(): string {
-    return this.cwd;
+    return session.cwd;
   }
 
   setWorkingDir(dir: string): void {
-    this.cwd = path.resolve(dir);
+    session.cwd = path.resolve(dir);
+    this.cwd = session.cwd;
   }
 
   getBugCommand(): BugCommandSettings | undefined {
@@ -496,6 +498,7 @@ export function createToolRegistry(config: Config): Promise<ToolRegistry> {
   registerCoreTool(LSTool, targetDir, config);
   registerCoreTool(ReadFileTool, targetDir, config);
   registerCoreTool(GrepTool, targetDir);
+  registerCoreTool(SearchTextTool, targetDir);
   registerCoreTool(GlobTool, targetDir, config);
   registerCoreTool(EditTool, config);
   registerCoreTool(WriteFileTool, config);
