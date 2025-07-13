@@ -12,10 +12,8 @@ With the Gemini CLI you can:
 - Query and edit large codebases in and beyond Gemini's 1M token context window.
 - Generate new apps from PDFs or sketches, using Gemini's multimodal capabilities.
 - Automate operational tasks, like querying pull requests or handling complex rebases.
-- Use tools and MCP servers to connect new capabilities, including [media generation with Imagen,
-  Veo or Lyria](https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia)
-- Ground your queries with the [Google Search](https://ai.google.dev/gemini-api/docs/grounding)
-  tool, built in to Gemini.
+- Use tools and MCP servers to connect new capabilities, such as media generation via local servers.
+- Ground your queries with the built-in web search tool.
 
 ## Quickstart
 
@@ -34,22 +32,24 @@ With the Gemini CLI you can:
    ```
 
 3. **Pick a color theme**
-4. **Authenticate:** When prompted, sign in with your personal Google account. This will grant you up to 60 model requests per minute and 1,000 model requests per day using Gemini.
+4. **Authenticate:** No authentication is required when using a local Ollama server.
 
 You are now ready to use the Gemini CLI!
 
-### For advanced use or increased limits:
+### For advanced use
 
-If you need to use a specific model or require a higher request capacity, you can use an API key:
+You can configure the connection by creating a `.ollama-config` file containing variables like:
 
-1. Generate a key from [Google AI Studio](https://aistudio.google.com/apikey).
-2. Set it as an environment variable in your terminal. Replace `YOUR_API_KEY` with your generated key.
+```bash
+AI_CHAT_BASE_URL=http://172.16.0.1:11434/v1
+AI_CHAT_MODEL=gemma3n:e4b
+AI_CHAT_KEY=dummy
+AI_CHAT_NAME=Gemma-3n
+```
 
-   ```bash
-   export GEMINI_API_KEY="YOUR_API_KEY"
-   ```
-
-For other authentication methods, including Google Workspace accounts, see the [authentication](./docs/cli/authentication.md) guide.
+These values will be loaded when you select the **Ollama** auth method. You can also use `OLLAMA_BASE_URL` to override the default host.
+You may also set `DEFAULT_GEMINI_MODEL`, `DEFAULT_GEMINI_FLASH_MODEL`, and `DEFAULT_GEMINI_EMBEDDING_MODEL` here to override the built-in defaults.
+Variables from `.ollama-config` override any existing environment variables, so you can maintain different settings per project.
 
 ## Examples
 

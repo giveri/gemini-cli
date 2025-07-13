@@ -62,7 +62,7 @@ service:
 `;
 
 async function main() {
-  console.log('✨ Starting Local Telemetry Exporter for Google Cloud ✨');
+  console.log('✨ Starting Local Telemetry Exporter ✨');
 
   let collectorProcess;
   let collectorLogFd;
@@ -83,21 +83,10 @@ async function main() {
     console.error(
       '🛑 Error: OTLP_GOOGLE_CLOUD_PROJECT environment variable is not exported.',
     );
-    console.log(
-      '   Please set it to your Google Cloud Project ID and try again.',
-    );
     console.log('   `export OTLP_GOOGLE_CLOUD_PROJECT=your-project-id`');
     process.exit(1);
   }
-  console.log(`✅ Using OTLP Google Cloud Project ID: ${projectId}`);
-
-  console.log('\n🔑 Please ensure you are authenticated with Google Cloud:');
-  console.log(
-    '  - Run `gcloud auth application-default login` OR ensure `GOOGLE_APPLICATION_CREDENTIALS` environment variable points to a valid service account key.',
-  );
-  console.log(
-    '  - The account needs "Cloud Trace Agent", "Monitoring Metric Writer", and "Logs Writer" roles.',
-  );
+  console.log(`✅ Using OTLP project ID: ${projectId}`);
 
   if (!fileExists(BIN_DIR)) fs.mkdirSync(BIN_DIR, { recursive: true });
 
@@ -172,16 +161,8 @@ async function main() {
   console.log(
     `📄 Tail collector logs in another terminal: tail -f ${OTEL_LOG_FILE}`,
   );
-  console.log(`\n📊 View your telemetry data in Google Cloud Console:`);
-  console.log(
-    `   - Logs: https://console.cloud.google.com/logs/query;query=logName%3D%22projects%2F${projectId}%2Flogs%2Fgemini_cli%22?project=${projectId}`,
-  );
-  console.log(
-    `   - Metrics: https://console.cloud.google.com/monitoring/metrics-explorer?project=${projectId}`,
-  );
-  console.log(
-    `   - Traces: https://console.cloud.google.com/traces/list?project=${projectId}`,
-  );
+  console.log(`\n📊 View your telemetry data locally:`);
+  console.log('   - Jaeger UI: http://localhost:16686');
   console.log(`\nPress Ctrl+C to exit.`);
 }
 

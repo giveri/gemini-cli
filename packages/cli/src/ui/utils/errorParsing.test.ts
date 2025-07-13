@@ -11,7 +11,7 @@ import { AuthType, StructuredError } from '@google/gemini-cli-core';
 describe('parseAndFormatApiError', () => {
   const enterpriseMessage = 'upgrade to a plan with higher limits';
   const vertexMessage = 'request a quota increase through Vertex';
-  const geminiMessage = 'request a quota increase through AI Studio';
+  const geminiMessage = 'contact your provider to request higher limits';
 
   it('should format a valid API error JSON', () => {
     const errorMessage =
@@ -74,7 +74,7 @@ describe('parseAndFormatApiError', () => {
       error: {
         code: 429,
         message:
-          "Gemini 2.5 Pro Preview doesn't have a free quota tier. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.",
+          "Gemini 2.5 Pro Preview doesn't have a free quota tier. Consult your provider's documentation for rate limit details.",
         status: 'RESOURCE_EXHAUSTED',
       },
     });

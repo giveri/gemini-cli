@@ -37,7 +37,7 @@ import {
   createContentGenerator,
 } from './contentGenerator.js';
 import { ProxyAgent, setGlobalDispatcher } from 'undici';
-import { DEFAULT_GEMINI_FLASH_MODEL } from '../config/models.js';
+import { getDefaultGeminiFlashModel } from '../config/models.js';
 import { AuthType } from './contentGenerator.js';
 
 function isThinkingSupported(model: string) {
@@ -252,7 +252,7 @@ export class GeminiClient {
     contents: Content[],
     schema: SchemaUnion,
     abortSignal: AbortSignal,
-    model: string = DEFAULT_GEMINI_FLASH_MODEL,
+    model: string = getDefaultGeminiFlashModel(),
     config: GenerateContentConfig = {},
   ): Promise<Record<string, unknown>> {
     try {
@@ -298,18 +298,26 @@ export class GeminiClient {
       try {
         return JSON.parse(text);
       } catch (parseError) {
-        await reportError(
-          parseError,
-          'Failed to parse JSON response from generateJson.',
-          {
-            responseTextFailedToParse: text,
-            originalRequestContents: contents,
-          },
-          'generateJson-parse',
-        );
-        throw new Error(
-          `Failed to parse API response as JSON: ${getErrorMessage(parseError)}`,
-        );
+        const trimmed = text
+          .trim()
+          .replace(/^```(?:json)?\n/, '')
+          .replace(/```\s*$/, '');
+        try {
+          return JSON.parse(trimmed);
+        } catch {
+          await reportError(
+            parseError,
+            'Failed to parse JSON response from generateJson.',
+            {
+              responseTextFailedToParse: text,
+              originalRequestContents: contents,
+            },
+            'generateJson-parse',
+          );
+          throw new Error(
+            `Failed to parse API response as JSON: ${getErrorMessage(parseError)}`,
+          );
+        }
       }
     } catch (error) {
       if (abortSignal.aborted) {
@@ -509,7 +517,7 @@ export class GeminiClient {
     }
 
     const currentModel = this.model;
-    const fallbackModel = DEFAULT_GEMINI_FLASH_MODEL;
+    const fallbackModel = getDefaultGeminiFlashModel();
 
     // Don't fallback if already using Flash model
     if (currentModel === fallbackModel) {

@@ -7,11 +7,11 @@
 import { AuthType, StructuredError } from '@google/gemini-cli-core';
 
 const RATE_LIMIT_ERROR_MESSAGE_GOOGLE =
-  '\nPlease wait and try again later. To increase your limits, upgrade to a plan with higher limits, or use /auth to switch to using a paid API key from AI Studio at https://aistudio.google.com/apikey';
+  '\nPlease wait and try again later. To increase your limits, upgrade to a plan with higher limits or contact your provider.';
 const RATE_LIMIT_ERROR_MESSAGE_USE_GEMINI =
-  '\nPlease wait and try again later. To increase your limits, request a quota increase through AI Studio, or switch to another /auth method';
+  '\nPlease wait and try again later. To increase your limits, request a quota increase from your provider, or switch to another /auth method';
 const RATE_LIMIT_ERROR_MESSAGE_VERTEX =
-  '\nPlease wait and try again later. To increase your limits, request a quota increase through Vertex, or switch to another /auth method';
+  '\nPlease wait and try again later. To increase your limits, request a quota increase from your provider, or switch to another /auth method';
 const RATE_LIMIT_ERROR_MESSAGE_DEFAULT =
   'Your request has been rate limited. Please wait and try again later.';
 
