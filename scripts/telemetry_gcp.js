@@ -172,16 +172,8 @@ async function main() {
   console.log(
     `📄 Tail collector logs in another terminal: tail -f ${OTEL_LOG_FILE}`,
   );
-  console.log(`\n📊 View your telemetry data in Google Cloud Console:`);
-  console.log(
-    `   - Logs: https://console.cloud.google.com/logs/query;query=logName%3D%22projects%2F${projectId}%2Flogs%2Fgemini_cli%22?project=${projectId}`,
-  );
-  console.log(
-    `   - Metrics: https://console.cloud.google.com/monitoring/metrics-explorer?project=${projectId}`,
-  );
-  console.log(
-    `   - Traces: https://console.cloud.google.com/traces/list?project=${projectId}`,
-  );
+  console.log(`\n📊 View your telemetry data locally:`);
+  console.log('   - Jaeger UI: http://localhost:16686');
   console.log(`\nPress Ctrl+C to exit.`);
 }
 
