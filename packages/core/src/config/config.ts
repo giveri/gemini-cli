@@ -19,6 +19,7 @@ import { GlobTool } from '../tools/glob.js';
 import { EditTool } from '../tools/edit.js';
 import { ShellTool } from '../tools/shell.js';
 import { WriteFileTool } from '../tools/write-file.js';
+import { CreateFolderTool } from '../tools/create-folder.js';
 import { WebFetchTool } from '../tools/web-fetch.js';
 import { ReadManyFilesTool } from '../tools/read-many-files.js';
 import { MemoryTool, setGeminiMdFilename } from '../tools/memoryTool.js';
@@ -36,8 +37,8 @@ import {
   StartSessionEvent,
 } from '../telemetry/index.js';
 import {
-  DEFAULT_GEMINI_EMBEDDING_MODEL,
-  DEFAULT_GEMINI_FLASH_MODEL,
+  getDefaultGeminiEmbeddingModel,
+  getDefaultGeminiFlashModel,
 } from './models.js';
 import { ClearcutLogger } from '../telemetry/clearcut-logger/clearcut-logger.js';
 
@@ -170,7 +171,7 @@ export class Config {
   constructor(params: ConfigParameters) {
     this.sessionId = params.sessionId;
     this.embeddingModel =
-      params.embeddingModel ?? DEFAULT_GEMINI_EMBEDDING_MODEL;
+      params.embeddingModel ?? getDefaultGeminiEmbeddingModel();
     this.sandbox = params.sandbox;
     this.targetDir = path.resolve(params.targetDir);
     this.debugMode = params.debugMode;
@@ -487,6 +488,7 @@ export function createToolRegistry(config: Config): Promise<ToolRegistry> {
   registerCoreTool(GlobTool, targetDir, config);
   registerCoreTool(EditTool, config);
   registerCoreTool(WriteFileTool, config);
+  registerCoreTool(CreateFolderTool, targetDir, config);
   registerCoreTool(WebFetchTool, config);
   registerCoreTool(ReadManyFilesTool, targetDir, config);
   registerCoreTool(ShellTool, config);
@@ -498,5 +500,5 @@ export function createToolRegistry(config: Config): Promise<ToolRegistry> {
   })();
 }
 
-// Export model constants for use in CLI
-export { DEFAULT_GEMINI_FLASH_MODEL };
+// Export model getter for use in CLI
+export { getDefaultGeminiFlashModel };

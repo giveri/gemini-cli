@@ -17,7 +17,7 @@ The following lists the precedence for applying telemetry settings, with items l
 1.  **CLI flags (for `gemini` command):**
 
     - `--telemetry` / `--no-telemetry`: Overrides `telemetry.enabled`.
-    - `--telemetry-target <local|gcp>`: Overrides `telemetry.target`.
+    - `--telemetry-target <local>`: Overrides `telemetry.target`.
     - `--telemetry-otlp-endpoint <URL>`: Overrides `telemetry.otlpEndpoint`.
     - `--telemetry-log-prompts` / `--no-telemetry-log-prompts`: Overrides `telemetry.logPrompts`.
 
@@ -35,18 +35,18 @@ The following lists the precedence for applying telemetry settings, with items l
     - `telemetry.otlpEndpoint`: `http://localhost:4317`
     - `telemetry.logPrompts`: `true`
 
-**For the `npm run telemetry -- --target=<gcp|local>` script:**
-The `--target` argument to this script _only_ overrides the `telemetry.target` for the duration and purpose of that script (i.e., choosing which collector to start). It does not permanently change your `settings.json`. The script will first look at `settings.json` for a `telemetry.target` to use as its default.
+**For the `npm run telemetry` script:**
+The script temporarily sets `telemetry.target` to `local` while it runs. It does not permanently change your `settings.json`.
 
 ### Example settings
 
-The following code can be added to your workspace (`.gemini/settings.json`) or user (`~/.gemini/settings.json`) settings to enable telemetry and send the output to Google Cloud:
+The following code can be added to your workspace (`.gemini/settings.json`) or user (`~/.gemini/settings.json`) settings to enable telemetry:
 
 ```json
 {
   "telemetry": {
     "enabled": true,
-    "target": "gcp"
+    "target": "local"
   },
   "sandbox": false
 }
@@ -63,13 +63,13 @@ Learn more about OTEL exporter standard configuration in [documentation][otel-co
 
 ### Local
 
-Use the `npm run telemetry -- --target=local` command to automate the process of setting up a local telemetry pipeline, including configuring the necessary settings in your `.gemini/settings.json` file. The underlying script installs `otelcol-contrib` (the OpenTelemetry Collector) and `jaeger` (The Jaeger UI for viewing traces). To use it:
+Use the `npm run telemetry` command to automate the process of setting up a local telemetry pipeline, including configuring the necessary settings in your `.gemini/settings.json` file. The underlying script installs `otelcol-contrib` (the OpenTelemetry Collector) and `jaeger` (The Jaeger UI for viewing traces). To use it:
 
 1.  **Run the command**:
     Execute the command from the root of the repository:
 
     ```bash
-    npm run telemetry -- --target=local
+    npm run telemetry
     ```
 
     The script will:
@@ -89,46 +89,6 @@ Use the `npm run telemetry -- --target=local` command to automate the process of
 1.  **Stop the services**:
     Press `Ctrl+C` in the terminal where the script is running to stop the OTEL Collector and Jaeger services.
 
-### Google Cloud
-
-Use the `npm run telemetry -- --target=gcp` command to automate setting up a local OpenTelemetry collector that forwards data to your Google Cloud project, including configuring the necessary settings in your `.gemini/settings.json` file. The underlying script installs `otelcol-contrib`. To use it:
-
-1.  **Prerequisites**:
-
-    - Have a Google Cloud project ID.
-    - Export the `GOOGLE_CLOUD_PROJECT` environment variable to make it available to the OTEL collector.
-      ```bash
-      export OTLP_GOOGLE_CLOUD_PROJECT="your-project-id"
-      ```
-    - Authenticate with Google Cloud (e.g., run `gcloud auth application-default login` or ensure `GOOGLE_APPLICATION_CREDENTIALS` is set).
-    - Ensure your Google Cloud account/service account has the necessary IAM roles: "Cloud Trace Agent", "Monitoring Metric Writer", and "Logs Writer".
-
-1.  **Run the command**:
-    Execute the command from the root of the repository:
-
-    ```bash
-    npm run telemetry -- --target=gcp
-    ```
-
-    The script will:
-
-    - Download the `otelcol-contrib` binary if needed.
-    - Start an OTEL collector configured to receive data from Gemini CLI and export it to your specified Google Cloud project.
-    - Automatically enable telemetry and disable sandbox mode in your workspace settings (`.gemini/settings.json`).
-    - Provide direct links to view traces, metrics, and logs in your Google Cloud Console.
-    - On exit (Ctrl+C), it will attempt to restore your original telemetry and sandbox settings.
-
-1.  **Run Gemini CLI:**
-    In a separate terminal, run your Gemini CLI commands. This generates telemetry data that the collector captures.
-
-1.  **View telemetry in Google Cloud**:
-    Use the links provided by the script to navigate to the Google Cloud Console and view your traces, metrics, and logs.
-
-1.  **Inspect local collector logs**:
-    The script redirects the local OTEL collector output to `~/.gemini/tmp/<projectHash>/otel/collector-gcp.log`. The script provides links to view and command to tail your collector logs locally.
-
-1.  **Stop the service**:
-    Press `Ctrl+C` in the terminal where the script is running to stop the OTEL Collector.
 
 ## Logs and metric reference
 

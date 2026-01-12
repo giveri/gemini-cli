@@ -11,7 +11,7 @@ export const DEFAULT_TOKEN_LIMIT = 1_048_576;
 
 export function tokenLimit(model: Model): TokenCount {
   // Add other models as they become relevant or if specified by config
-  // Pulled from https://ai.google.dev/gemini-api/docs/models
+  // Token limits sourced from the Ollama documentation
   switch (model) {
     case 'gemini-1.5-pro':
       return 2_097_152;

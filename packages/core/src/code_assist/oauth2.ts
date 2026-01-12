@@ -20,24 +20,19 @@ const OAUTH_CLIENT_ID =
 
 // OAuth Secret value used to initiate OAuth2Client class.
 // Note: It's ok to save this in git because this is an installed application
-// as described here: https://developers.google.com/identity/protocols/oauth2#installed
-// "The process results in a client ID and, in some cases, a client secret,
-// which you embed in the source code of your application. (In this context,
-// the client secret is obviously not treated as a secret.)"
+// where the client secret is not treated as a secret.
 const OAUTH_CLIENT_SECRET = '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';
 
 // OAuth Scopes for Cloud Code authorization.
 const OAUTH_SCOPE = [
-  'https://www.googleapis.com/auth/cloud-platform',
-  'https://www.googleapis.com/auth/userinfo.email',
-  'https://www.googleapis.com/auth/userinfo.profile',
+  'https://example.com/auth/cloud-platform',
+  'https://example.com/auth/userinfo.email',
+  'https://example.com/auth/userinfo.profile',
 ];
 
 const HTTP_REDIRECT = 301;
-const SIGN_IN_SUCCESS_URL =
-  'https://developers.google.com/gemini-code-assist/auth_success_gemini';
-const SIGN_IN_FAILURE_URL =
-  'https://developers.google.com/gemini-code-assist/auth_failure_gemini';
+const SIGN_IN_SUCCESS_URL = 'about:blank';
+const SIGN_IN_FAILURE_URL = 'about:blank';
 
 const GEMINI_DIR = '.gemini';
 const CREDENTIAL_FILENAME = 'oauth_creds.json';
